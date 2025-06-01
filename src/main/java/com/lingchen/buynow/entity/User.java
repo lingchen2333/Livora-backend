@@ -1,0 +1,54 @@
+package com.lingchen.buynow.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.NaturalId;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String firstName;
+    private String lastName;
+
+    @NaturalId //make email unique
+    private String email;
+    private String password;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //mappedBy = "user": Cart owns the relationship, and it has a field called user annotated with @OneToOne and @JoinColumn.
+    //Cart will have a foreign key user_id, but User won't have a foreign key
+    //CascadeType.ALL: if a User is deleted, the Cart will be affected too
+    private Cart cart;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade =
+            {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+
+    @JoinTable(name = "user_roles", //a third table to join User and Role
+            joinColumns = @JoinColumn(name = "user_id",
+                    referencedColumnName = "id"), //id of User
+            inverseJoinColumns = @JoinColumn(name = "role_id",
+                    referencedColumnName = "id") //id of Role
+    )
+    private Collection<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addressList;
+}
