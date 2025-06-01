@@ -19,18 +19,18 @@ public class CategoryService implements ICategoryService {
     private final ProductRepository productRepository;
 
     @Override
-    public Category addCategory(Category category) {
-        if (categoryRepository.existsByName(category.getName())) {
-            throw new EntityExistsException(category.getName() + " already exists!");
+    public Category addCategory(String categoryName) {
+        if (categoryRepository.existsByName(categoryName)) {
+            throw new EntityExistsException(categoryName + " already exists!");
         }
-        return categoryRepository.save(category);
+        return categoryRepository.save(new Category(categoryName));
     }
 
 
     @Override
-    public Category updateCategory(Category newCategory, Long categoryId) {
+    public Category updateCategory(String newCategoryName, Long categoryId) {
         Category oldCategory = this.getCategoryById(categoryId);
-        oldCategory.setName(newCategory.getName());
+        oldCategory.setName(newCategoryName);
         return categoryRepository.save(oldCategory);
     }
 
@@ -55,6 +55,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category getCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+        return categoryRepository.findByName(name)
+                .orElse(null);
     }
 }

@@ -21,9 +21,9 @@ public class OrderItem {
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
 
-    private Long productId;
-    private String productName;
-    private String productBrand;
+//    private Long productId;
+//    private String productName;
+//    private String productBrand;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -38,9 +38,9 @@ public class OrderItem {
         this.quantity = quantity;
         this.unitPrice = unitPrice;
 
-        this.productId = product.getId();
-        this.productName = product.getName();
-        this.productBrand = product.getBrand();
+//        this.productId = product.getId();
+//        this.productName = product.getName();
+//        this.productBrand = product.getBrand();
 
         this.product = product;
         this.order = order;

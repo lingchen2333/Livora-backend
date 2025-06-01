@@ -34,27 +34,25 @@ public class ProductService implements IProductService {
         if (productExists(request.getName(), request.getBrand())) {
             throw new EntityExistsException(request.getName() + " already exists");
         }
-        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
-                .orElseGet(() -> {
-                    Category newCategory = new Category(request.getCategory().getName());
-                    return categoryRepository.save(newCategory);
-                });
-        request.setCategory(category);
-        return productRepository.save(createProduct(request));
+        String categoryName = request.getCategoryName();
+        Category category = (categoryRepository.findByName(categoryName))
+                .orElseGet(() -> categoryRepository.save(new Category(categoryName)));
+
+        return productRepository.save(createProduct(request, category));
     }
 
     private boolean productExists(String name, String brand) {
         return productRepository.existsByNameAndBrand(name, brand);
     }
 
-    private Product createProduct(AddProductRequest request) {
+    private Product createProduct(AddProductRequest request, Category category) {
         return new Product(
                 request.getName(),
                 request.getBrand(),
                 request.getPrice(),
                 request.getInventory(),
                 request.getDescription(),
-                request.getCategory()
+                category
         );
     }
 
@@ -71,10 +69,11 @@ public class ProductService implements IProductService {
         existingProduct.setPrice(request.getPrice());
         existingProduct.setInventory(request.getInventory());
         existingProduct.setDescription(request.getDescription());
-        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
-                .orElseGet(() -> {
-                    return new Category(request.getCategory().getName());
-                });
+
+        String categoryName = request.getCategoryName();
+        Category category = categoryRepository.findByName(categoryName)
+                        .orElseGet(() -> categoryRepository.save(new Category(categoryName)));
+
         existingProduct.setCategory(category);
         return productRepository.save(existingProduct);
     }

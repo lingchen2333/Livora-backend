@@ -30,14 +30,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> addCategory(@RequestBody Category category) {
-        Category addedCategory = categoryService.addCategory(category);
+    public ResponseEntity<ApiResponse> addCategory(@RequestBody String categoryName) {
+        Category addedCategory = categoryService.addCategory(categoryName);
         return ResponseEntity.ok(new ApiResponse("Success", addedCategory));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @RequestBody Category category) {
-        Category updatedCategory = categoryService.updateCategory(category, id);
+    public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @RequestBody String newCategoryName) {
+        Category updatedCategory = categoryService.updateCategory(newCategoryName, id);
         return ResponseEntity.ok(new ApiResponse("Update success!", updatedCategory));
     }
 
