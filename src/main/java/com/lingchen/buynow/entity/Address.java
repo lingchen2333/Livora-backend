@@ -23,6 +23,7 @@ public class Address {
     private String addressLine1;
     private String addressLine2;
     private String postCode;
+    private String phone;
 
     @Enumerated(EnumType.STRING)
     private AddressType addressType;

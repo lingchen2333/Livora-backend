@@ -11,5 +11,6 @@ public class AddressDto {
     private String addressLine1;
     private String addressLine2;
     private String postCode;
+    private String phone;
     private AddressType addressType;
 }
