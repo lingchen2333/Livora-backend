@@ -10,5 +10,7 @@ public class OrderItemDto {
     private int quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
-    private ProductDto product;
+    private String itemName;
+    private String itemBrand;
+    private Long itemProductId;
 }

@@ -6,6 +6,7 @@ import com.lingchen.buynow.enums.OrderStatus;
 import com.lingchen.buynow.repository.OrderRepository;
 import com.lingchen.buynow.service.cart.CartService;
 import com.lingchen.buynow.service.user.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ public class OrderService implements IOrderService {
 
     private Order createOrder(Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
+        if (cart.getItems().isEmpty()) {
+           throw new EntityNotFoundException("Cannot place order on an empty cart");
+        }
         User user = userService.getUserById(userId);
         //create order from cart
         Order order = new Order();
@@ -68,6 +72,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public OrderDto convertToDto(Order order) {
+        order.getItems().size();
         return modelMapper.map(order, OrderDto.class);
     }
 }

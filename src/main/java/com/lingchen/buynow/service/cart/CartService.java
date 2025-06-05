@@ -63,6 +63,7 @@ public class CartService implements ICartService {
 
     @Override
     public CartDto convertToDto(Cart cart) {
+        cart.getItems().size();
         return modelMapper.map(cart, CartDto.class);
     }
 }
