@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.lingchen</groupId>
-	<artifactId>buynow</artifactId>
+	<artifactId>livora</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>buynow</name>
+	<name>livora</name>
 	<description>An e-commerce application</description>
 	<url/>
 	<licenses>
