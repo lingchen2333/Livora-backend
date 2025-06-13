@@ -4,7 +4,9 @@ import com.lingchen.livora.dto.ProductDto;
 import com.lingchen.livora.entity.Product;
 import com.lingchen.livora.request.AddProductRequest;
 import com.lingchen.livora.request.UpdateProductRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IProductService {
@@ -21,6 +23,7 @@ public interface IProductService {
     List<Product> getProductsByName(String name);
     List<Product> getProductsByBrandAndName(String brand, String name);
     List<Product> getProductsByCategoryAndBrand(String category, String brand);
+    List<Product> searchProductByImage(MultipartFile image) throws IOException;
 
     List<String> getDistinctProductBrands();
 

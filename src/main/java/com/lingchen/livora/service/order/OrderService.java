@@ -4,8 +4,12 @@ import com.lingchen.livora.dto.OrderDto;
 import com.lingchen.livora.entity.*;
 import com.lingchen.livora.enums.OrderStatus;
 import com.lingchen.livora.repository.OrderRepository;
+import com.lingchen.livora.request.PaymentRequest;
 import com.lingchen.livora.service.cart.CartService;
 import com.lingchen.livora.service.user.UserService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,14 +31,13 @@ public class OrderService implements IOrderService {
 
     @Override
     public Order placeOrder(Long userId) {
-        Order order = orderRepository.save(this.createOrder(userId));
-        return order;
+        return orderRepository.save(this.createOrder(userId));
     }
 
     private Order createOrder(Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
         if (cart.getItems().isEmpty()) {
-           throw new EntityNotFoundException("Cannot place order on an empty cart");
+            throw new EntityNotFoundException("Cannot place order on an empty cart");
         }
         User user = userService.getUserById(userId);
         //create order from cart
@@ -68,6 +71,20 @@ public class OrderService implements IOrderService {
     @Override
     public List<Order> getUserOrders(Long userId) {
         return orderRepository.findOrdersByUserId(userId);
+    }
+
+    @Override
+    public String createPaymentIntent(PaymentRequest request) throws StripeException {
+        long amountInSmallestUnit = Math.round(request.getAmount() * 100);
+        PaymentIntent intent = PaymentIntent.create(
+                PaymentIntentCreateParams.builder()
+                        .setAmount(amountInSmallestUnit)
+                        .setCurrency(request.getCurrency())
+                        .addPaymentMethodType("card")
+                        .build()
+        );
+
+        return intent.getClientSecret();
     }
 
     @Override

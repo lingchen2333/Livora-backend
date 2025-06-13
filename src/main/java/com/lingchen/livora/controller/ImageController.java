@@ -5,6 +5,7 @@ import com.lingchen.livora.dto.ImageDto;
 import com.lingchen.livora.entity.Image;
 import com.lingchen.livora.response.ApiResponse;
 import com.lingchen.livora.service.image.IImageService;
+import com.lingchen.livora.service.llm.LLMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -23,6 +25,8 @@ import java.util.List;
 public class ImageController {
 
     private final IImageService imageService;
+    private final LLMService llmService;
+
 
     @PostMapping("/products/{productId}/images")
     public ResponseEntity<ApiResponse> uploadImages(
@@ -44,7 +48,7 @@ public class ImageController {
     }
 
     @DeleteMapping("/images/{imageId}")
-    public ResponseEntity<ApiResponse> deleteImageById(@PathVariable Long imageId) {
+    public ResponseEntity<ApiResponse> deleteImageById(@PathVariable Long imageId) throws IOException {
         imageService.deleteImageById(imageId);
         return ResponseEntity.ok(new ApiResponse("Image deleted successfully", null));
     }
@@ -53,6 +57,12 @@ public class ImageController {
     public ResponseEntity<ApiResponse> updateImageById(@PathVariable Long imageId, @RequestParam("file") MultipartFile file) {
         Image image = imageService.updateImage(file, imageId);
         return ResponseEntity.ok(new ApiResponse("Image updated successfully", imageService.convertToDto(image)));
+    }
+
+    @GetMapping("/describe")
+    public ResponseEntity<ApiResponse> describeImage(@RequestParam("image") MultipartFile image) throws IOException {
+        String description = llmService.describeImage(image);
+        return ResponseEntity.ok(new ApiResponse("Image describe successfully", description));
     }
 }
 
