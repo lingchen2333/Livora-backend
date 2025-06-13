@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IImageService {
     Image getImageById(Long imageId);
-    void deleteImageById(Long imageId) throws IOException;
+    void deleteImageById(Long imageId);
     Image updateImage(MultipartFile file, Long imageId);
     List<ImageDto> saveImages(Long productId, List<MultipartFile> files);
 

@@ -38,7 +38,7 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public void deleteImageById(Long imageId) throws IOException {
+    public void deleteImageById(Long imageId)  {
         Image imageToDelete = this.getImageById(imageId);
         Product productAffected = productRepository.findByImageId(imageId);
         productAffected.getImages().remove(imageToDelete);
