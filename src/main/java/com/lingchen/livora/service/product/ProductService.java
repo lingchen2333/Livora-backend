@@ -6,16 +6,16 @@ import com.lingchen.livora.entity.*;
 import com.lingchen.livora.repository.*;
 import com.lingchen.livora.request.AddProductRequest;
 import com.lingchen.livora.request.UpdateProductRequest;
-import com.lingchen.livora.service.chroma.IChromaService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +28,7 @@ public class ProductService implements IProductService {
     private final OrderItemRepository orderItemRepository;
     private final ModelMapper modelMapper;
     private final ImageRepository imageRepository;
-    private final IChromaService chromaService;
+
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -166,11 +166,6 @@ public class ProductService implements IProductService {
         return productRepository.findByCategoryNameAndBrand(category, brand);
     }
 
-    @Override
-    public List<Product> searchProductByImage(MultipartFile image) throws IOException {
-        Set<Long> productIds = chromaService.searchImageSimilarity(image);
-        return productRepository.findAllById(productIds);
-    }
 
     @Override
     public List<String> getDistinctProductBrands() {

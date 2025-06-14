@@ -34,7 +34,7 @@ public class ShopConfig {
     @Value("${api.prefix}")
     private static String API;
 
-    @Value("{frontend.url}")
+    @Value("${frontend.url}")
     private String frontendUrl;
 
     private static final List<String> SECURED_URLS =

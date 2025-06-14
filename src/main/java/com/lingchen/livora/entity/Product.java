@@ -21,6 +21,8 @@ public class Product {
     private String brand;
     private BigDecimal price;
     private int inventory;
+
+    @Lob
     private String description;
 
 

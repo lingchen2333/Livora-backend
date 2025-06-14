@@ -5,7 +5,6 @@ import com.lingchen.livora.entity.Image;
 import com.lingchen.livora.entity.Product;
 import com.lingchen.livora.repository.ImageRepository;
 import com.lingchen.livora.repository.ProductRepository;
-import com.lingchen.livora.service.chroma.IChromaService;
 import com.lingchen.livora.service.product.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,6 @@ public class ImageService implements IImageService {
     private final ProductRepository productRepository;
     private final ProductService productService;
     private final ModelMapper modelMapper;
-    private final IChromaService chromaService;
 
     @Override
     public Image getImageById(Long imageId) {
@@ -38,12 +36,10 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public void deleteImageById(Long imageId)  {
+    public void deleteImageById(Long imageId) {
         Image imageToDelete = this.getImageById(imageId);
         Product productAffected = productRepository.findByImageId(imageId);
         productAffected.getImages().remove(imageToDelete);
-        //embedding
-        chromaService.deleteEmbeddingForImage(imageId);
         imageRepository.delete(imageToDelete);
     }
 
@@ -54,13 +50,8 @@ public class ImageService implements IImageService {
             image.setFileName(file.getOriginalFilename());
             image.setFileType(file.getContentType());
             image.setImage(new SerialBlob(file.getBytes()));
-            Image savedImage = imageRepository.save(image);
 
-            //update embedding:
-            chromaService.deleteEmbeddingForImage(imageId);
-            chromaService.saveEmbeddingForImage(file, savedImage.getId(), savedImage.getProduct().getId());
-
-            return savedImage;
+            return imageRepository.save(image);
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -85,10 +76,6 @@ public class ImageService implements IImageService {
                 imageRepository.save(savedImage);
                 ImageDto imageDto = this.convertToDto(savedImage);
                 savedImages.add(imageDto);
-
-                //embeddings
-                String description = chromaService.saveEmbeddingForImage(file, savedImage.getId(), productId);
-                log.info("Saved embedding: {} ", description);
 
             } catch (IOException | SQLException e) {
                 throw new RuntimeException(e.getMessage());

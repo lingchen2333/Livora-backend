@@ -5,7 +5,6 @@ import com.lingchen.livora.dto.ImageDto;
 import com.lingchen.livora.entity.Image;
 import com.lingchen.livora.response.ApiResponse;
 import com.lingchen.livora.service.image.IImageService;
-import com.lingchen.livora.service.llm.LLMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -25,7 +24,6 @@ import java.util.List;
 public class ImageController {
 
     private final IImageService imageService;
-    private final LLMService llmService;
 
 
     @PostMapping("/products/{productId}/images")
@@ -59,10 +57,5 @@ public class ImageController {
         return ResponseEntity.ok(new ApiResponse("Image updated successfully", imageService.convertToDto(image)));
     }
 
-    @GetMapping("/describe")
-    public ResponseEntity<ApiResponse> describeImage(@RequestParam("image") MultipartFile image) throws IOException {
-        String description = llmService.describeImage(image);
-        return ResponseEntity.ok(new ApiResponse("Image describe successfully", description));
-    }
 }
 
