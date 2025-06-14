@@ -59,7 +59,7 @@ public class ImageController {
         return ResponseEntity.ok(new ApiResponse("Image updated successfully", imageService.convertToDto(image)));
     }
 
-    @GetMapping("/describe")
+    @GetMapping("/images/describe")
     public ResponseEntity<ApiResponse> describeImage(@RequestParam("image") MultipartFile image) throws IOException {
         String description = llmService.describeImage(image);
         return ResponseEntity.ok(new ApiResponse("Image describe successfully", description));

@@ -82,7 +82,7 @@ public class ChromaService implements IChromaService {
         SearchRequest searchRequest = SearchRequest.builder()
                 .query(description)
                 .topK(10)
-                .similarityThreshold(0.8f)
+                .similarityThreshold(0.85f)
                 .build();
         List<Document> documents = chromaVectorStore.doSimilaritySearch(searchRequest);
         log.info("documents result: {}", documents);
