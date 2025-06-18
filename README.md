@@ -17,7 +17,6 @@ This is the backend of **Livora**, a Spring Boot-based RESTful API for managing 
 
 ## 🌐 Live Demo
 
-> ⚠️ **Free Tier Hosting Notice**: This backend is hosted on [Render](https://livora-backend-latest.onrender.com) using the free tier. If the app has been idle, the service may take 1 min to wake up. Please allow time for the first API request to complete.
 
 🔗 [https://shop-livora.netlify.app](https://shop-livora.netlify.app)
 
